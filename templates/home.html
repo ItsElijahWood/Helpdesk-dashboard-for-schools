@@ -12,37 +12,47 @@
         </div>
     </body>
     <script type="module">
-        await helpdeskInfo();
+        let polling = false;
 
+        await helpdeskInfo();
         setInterval(async () => {
-            await helpdeskInfo();
-        }, 10000);
+            if (!polling) {
+                await helpdeskInfo();
+            }
+        }, 15000);
 
         async function helpdeskInfo() {
-            const response = await fetch(
-                "http://localhost:3000/api/integrations/fresh-service",
-                {
-                    method: "GET",
-                },
-            );
+            polling = true;
 
-            if (response.ok) {
-                const data = await response.json();
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/integrations/fresh-service",
+                    {
+                        method: "GET",
+                    },
+                );
 
-                for (const d of data) {
-                    if (d.ut) {
-                        document.getElementById(
-                            "unassigned-ticket-value",
-                        ).innerHTML = d.ut.total;
+                if (response.ok) {
+                    const data = await response.json();
 
-                        if (d.ut.total > 0) {
-                            await unassignedAlarmTrigger();
+                    for (const d of data) {
+                        if (d.ut) {
+                            document.getElementById(
+                                "unassigned-ticket-value",
+                            ).innerHTML = d.ut.total;
+
+                            if (d.ut.total > 0) {
+                                await unassignedAlarmTrigger();
+                            }
                         }
-                    } else {
-                        console.log("no");
                     }
+                } else {
+                    console.error(
+                        "Failed to fetch helpdesk information. Check the rust console for any errors.",
+                    );
                 }
-            } else {
+            } finally {
+                polling = false;
             }
         }
 

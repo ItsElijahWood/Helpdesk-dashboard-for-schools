@@ -40,7 +40,10 @@ pub async fn fetch() -> Result<HttpResponse, ErrorTypes> {
                                           format!(r#""dt(status:2 OR status:9) AND due_by:>'{date}'""#),*/ // Due today
     ];
 
-    let client = Client::new();
+    let client = Client::builder()
+        .timeout(std::time::Duration::from_secs(30))
+        .finish();
+
     let mut fs_results: Vec<serde_json::Value> = Vec::new();
 
     for i in filters {
