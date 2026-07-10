@@ -1,4 +1,5 @@
 mod app;
+pub mod database;
 pub mod integrations;
 pub mod misc;
 pub mod public;

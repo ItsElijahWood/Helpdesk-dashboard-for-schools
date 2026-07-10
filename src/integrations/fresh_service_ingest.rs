@@ -81,7 +81,11 @@ pub async fn fetch() -> Result<HttpResponse, ErrorTypes> {
             ErrorTypes::InternalServerError
         })?;
 
-        let v: serde_json::Value = serde_json::from_slice(&body).unwrap();
+        let mut v: serde_json::Value = serde_json::from_slice(&body).unwrap();
+
+        if let Value::Object(ref mut m) = v {
+            m.remove("tickets");
+        }
 
         let mut m = Map::new();
         m.insert(identifier.to_string(), v);

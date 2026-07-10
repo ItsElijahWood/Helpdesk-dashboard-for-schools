@@ -5,9 +5,13 @@ use actix_web::{
     web,
 };
 use derive_more::Display;
+use terminal_link::Link;
 
-use crate::integrations::zabbix_ingest;
 use crate::public::home::home;
+use crate::{
+    database::seed_db,
+    integrations::{unfi_ingest, zabbix_ingest},
+};
 use crate::{integrations::fresh_service_ingest, misc::fs::notify};
 
 #[derive(Debug, Display)]
@@ -55,7 +59,10 @@ impl error::ResponseError for ErrorTypes {
 
 #[actix_web::main]
 pub async fn app() -> std::io::Result<()> {
-    println!("Webserver started on http://localhost:3000");
+    seed_db().await;
+
+    let link = Link::new("http://localhost:3000", "http://localhost:3000");
+    println!("Webserver started on {link}.");
 
     HttpServer::new(|| {
         App::new()
@@ -71,6 +78,7 @@ pub async fn app() -> std::io::Result<()> {
                 "/api/integrations/fresh-service",
                 web::get().to(fresh_service_ingest::fetch),
             )
+            .route("/api/integrations/unifi", web::get().to(unfi_ingest::fetch))
             // Misc
             .route("/api/misc/fs/notify", web::get().to(notify::play))
     })
