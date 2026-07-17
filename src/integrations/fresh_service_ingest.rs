@@ -41,7 +41,7 @@ pub async fn fetch() -> Result<HttpResponse, ErrorTypes> {
     ];
 
     let client = Client::builder()
-        .timeout(std::time::Duration::from_secs(30))
+        .timeout(std::time::Duration::from_secs(60))
         .finish();
 
     let mut fs_results: Vec<serde_json::Value> = Vec::new();

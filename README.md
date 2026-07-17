@@ -1,5 +1,5 @@
 # School Helpdesk Dashboard (IN DEVELOPMENT)
-A free, open-source helpdesk/dashboard for schools that integrates with the freshservice API. Built to be fast and efficient even on lower-end hardware. Includes multiple optional modules-such as UniFi CCTV (to monitor cameras online/offline) and Zabbix server/switch monitoring-that you can enable or disable via the .env file.
+A free, open-source helpdesk/dashboard for schools that integrates with the freshservice API. Built to be fast and efficient even on lower-end hardware. Includes multiple optional modules-such as UniFi CCTV (to monitor cameras online/offline) and Zabbix server/switch monitoring-that you can enable or disable via the dashboard.
 
 # System packages (required)
 ## Windows

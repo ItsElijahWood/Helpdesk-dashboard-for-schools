@@ -1,7 +1,8 @@
 mod app;
-pub mod database;
-pub mod integrations;
-pub mod misc;
+mod database;
+mod freshservice;
+mod integrations;
+mod misc;
 pub mod public;
 
 use dotenvy::dotenv;

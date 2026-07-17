@@ -7,12 +7,13 @@ use actix_web::{
 use derive_more::Display;
 use terminal_link::Link;
 
+use crate::freshservice::menu::files::custom_notify_upload;
 use crate::public::home::home;
 use crate::{
     database::seed_db,
     integrations::{unfi_ingest, zabbix_ingest},
 };
-use crate::{integrations::fresh_service_ingest, misc::fs::notify};
+use crate::{integrations::fresh_service_ingest, misc::freshservice::notify};
 
 #[derive(Debug, Display)]
 pub enum ErrorTypes {
@@ -81,6 +82,11 @@ pub async fn app() -> std::io::Result<()> {
             .route("/api/integrations/unifi", web::get().to(unfi_ingest::fetch))
             // Misc
             .route("/api/misc/fs/notify", web::get().to(notify::play))
+            // Freshservice
+            .route(
+                "/api/freshservice/custom-notify-upload",
+                web::post().to(custom_notify_upload::file),
+            )
     })
     .bind(("127.0.0.1", 3000))?
     .run()

@@ -1,6 +1,7 @@
-use std::str::FromStr;
+use std::{collections::HashMap, path::Path, str::FromStr};
 
 use sqlx::{ConnectOptions, Error, Result, SqliteConnection, sqlite::SqliteConnectOptions};
+use tokio::fs;
 
 pub async fn seed_db() {
     let mut conn = connection().await.unwrap();
@@ -30,17 +31,43 @@ pub async fn seed_db() {
     .await
     .expect("failed to create the table.");
 
-    sqlx::query(
-        "INSERT INTO freshservice (file_name, file_ext, file_length, is_default, is_selected) VALUES (?, ?, ?, ?, ?)"
-    )
-    .bind("ut-sound")
-    .bind("wav")
-    .bind(2)
-    .bind(1)
-    .bind(1)
-    .execute(&mut conn)
-    .await
-    .expect("failed to seed the table.");
+    let default_files_directory = Path::new("assets/media/fs/default");
+    let mut entries = fs::read_dir(default_files_directory).await.unwrap();
+
+    let mut v: Vec<HashMap<String, String>> = Vec::new();
+    while let Some(entry) = entries.next_entry().await.unwrap() {
+        let path = entry.path();
+
+        let file_name = path.file_stem().unwrap();
+        let file_ext = path.extension().unwrap();
+
+        let mut map: HashMap<String, String> = HashMap::new();
+
+        map.insert(
+            "filename".to_string(),
+            file_name.to_string_lossy().into_owned(),
+        );
+        map.insert(
+            "fileext".to_string(),
+            file_ext.to_string_lossy().into_owned(),
+        );
+
+        v.push(map);
+    }
+
+    for i in v {
+        sqlx::query(
+            "INSERT INTO freshservice (file_name, file_ext, file_length, is_default, is_selected) VALUES (?, ?, ?, ?, ?)"
+        )
+        .bind(i.get("filename"))
+        .bind(i.get("fileext"))
+        .bind(2)
+        .bind(1)
+        .bind(0)
+        .execute(&mut conn)
+        .await
+        .expect("failed to seed the table.");
+    }
 
     println!("Seeded the database.");
     println!("Database setup.");

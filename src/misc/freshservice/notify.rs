@@ -14,9 +14,13 @@ pub async fn play() -> Result<HttpResponse, ErrorTypes> {
 
     let notification = sqlx::query("SELECT * FROM freshservice WHERE is_selected = ?")
         .bind(1)
-        .fetch_one(&mut conn)
+        .fetch_optional(&mut conn)
         .await
         .unwrap();
+
+    if notification.is_none() {
+        return Ok(HttpResponseBuilder::new(StatusCode::NO_CONTENT).finish());
+    }
 
     let mut sink_handle = DeviceSinkBuilder::open_default_sink()
         .expect("failed to open os sink for default audio output stream.");
@@ -24,9 +28,11 @@ pub async fn play() -> Result<HttpResponse, ErrorTypes> {
 
     let player = Player::connect_new(&sink_handle.mixer());
 
-    let file_is_default: u8 = notification.try_get("is_default").unwrap();
-    let freshservice_file_name: String = notification.try_get("file_name").unwrap();
-    let freshservice_file_ext: String = notification.try_get("file_ext").unwrap();
+    let notification_value = notification.unwrap();
+
+    let file_is_default: u8 = notification_value.try_get("is_default").unwrap();
+    let freshservice_file_name: String = notification_value.try_get("file_name").unwrap();
+    let freshservice_file_ext: String = notification_value.try_get("file_ext").unwrap();
 
     let mut file_name = String::new();
     if file_is_default == 1 {

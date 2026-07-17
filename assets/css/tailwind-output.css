@@ -1,0 +1,18 @@
+/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --color-pink-400: oklch(71.8% 0.202 349.761);
+  }
+}
+@layer utilities {
+  .static {
+    position: static;
+  }
+  .table {
+    display: table;
+  }
+  .bg-pink-400 {
+    background-color: var(--color-pink-400);
+  }
+}
