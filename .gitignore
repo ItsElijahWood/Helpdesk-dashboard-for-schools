@@ -1,6 +1,6 @@
 /target
 /node_modules
-/assets/css/tailwind-output.css
+assets/css/tailwind-output.css
 .env
 database.db
 package-lock.json
