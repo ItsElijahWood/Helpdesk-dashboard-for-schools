@@ -12,7 +12,7 @@
         <script src="cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body class="m-0 font-segoe">
-        <header id="header" class="flex items-center bg-[#f3f2f0] h-20">
+        <header id="header" class="flex sticky top-0 items-center bg-[#f3f2f0] h-20">
             <div class="flex items-center gap-9 pl-8 w-1/3">
                 <div class="flex items-center cursor-pointer">
                     <img id="sidebarButton" src="/assets/imgs/sidebar-light.svg" width="20px" height="19px" />
@@ -23,16 +23,20 @@
                 <p id="time" class="text-[18px]">Loading time..</p>
             </div>
             <div class="flex gap-6 pr-15 w-1/3 justify-end">
-                <img src="/assets/imgs/theme-light.svg" width="24px" height="24px" />
-                <nav>
-                    <a href="github.com/ItsElijahWood/dashboard-for-schools">
-                        <img src="/assets/imgs/github-light.svg" width="24px" height="24px" />
-                    </a>
-                </nav>
+                <img src="/assets/imgs/theme-light.svg" width="23px" height="23px" />
             </div>
         </header>
         <div class="flex">
-            <aside id="sidebar" class="w-20 h-screen bg-[#f3f2f0] overflow-hidden transition-[width] duration-200 ease-in-out">
+            <aside id="sidebar"
+              class="w-20 bg-[#f3f2f0] overflow-hidden transition-[width] duration-200 ease-in-out sticky top-20 h-[calc(100vh-80px)] flex flex-col justify-center">
+                <div id="sidebar-nav" class="flex mt-auto mb-6 justify-center pointer-events-none">
+                    <a href="https://github.com/ItsElijahWood/dashboard-for-schools/issues" class="flex no-underline" target="_blank" rel="noopener noreferrer">
+                        <img src="/assets/imgs/question-light.svg" width="25" height="25" class="shrink-0" />
+                        <span id="sidebarQuestionText" class="ml-3 text-black whitespace-nowrap hidden">
+                            Need help?
+                        </span>
+                    </a>
+                </div>
             </aside>
         </div>
     </body>
